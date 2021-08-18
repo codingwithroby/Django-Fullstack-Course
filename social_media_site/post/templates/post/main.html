@@ -1,0 +1,73 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'post/css/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'post/css/base.css' %}">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>iPost It</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark main-color fixed-top">
+    <a class="navbar-brand" href="#">iPost It</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+
+        <ul class="navbar-nav">
+            {% if user.is_authenticated %}
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'post-home' %}">Home </a>
+            </li>
+            {% endif %}
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'post-about' %}">About</a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav ml-auto">
+            {% if user.is_authenticated %}
+            <li class="nav-item m-1">
+                <a type="button" class="btn btn-outline-light" href="{% url 'post-account' %}">
+                    Account
+                </a>
+            </li>
+            <li class="nav-item m-1">
+                <a type="button" class="btn btn-outline-light" href="{% url 'logout' %}">Logout</a>
+            </li>
+            {% else %}
+            <li class="nav-item m-1">
+                <a type="button" class="btn btn-outline-light" href="{% url 'users-register' %}">Register</a>
+            </li>
+            <li class="nav-item m-1">
+                <a type="button" class="btn btn-outline-light" href="{% url 'login' %}">Login</a>
+            </li>
+            {% endif %}
+
+        </ul>
+    </div>
+</nav>
+
+
+{% block content %}{% endblock %}
+
+
+<script src="{% static 'post/js/jquery-slim.js' %}"></script>
+<script src="{% static 'post/js/popper.js' %}"></script>
+<script src="{% static 'post/js/bootstrap.js' %}"></script>
+<script>
+    function singlePostit(postitId) {
+    let path = "single_post_it/" + postitId + "/";
+    location.replace(path);
+    }
+</script>
+
+</body>
+</html>

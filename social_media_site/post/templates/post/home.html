@@ -1,0 +1,159 @@
+{% extends "post/main.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="card" style="width: 18rem;">
+                <div class="d-flex justify-content-center mt-3">
+                    {% if not user.userimageextension.user_image.url %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="100"
+                         height="100"
+                         fill="currentColor"
+                         class="bi bi-person"
+                         viewBox="0 0 16 16">
+                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                    </svg>
+
+                    {% else %}
+                    <img class="rounded-circle"
+                         src="{{ user.userimageextension.user_image.url }}"
+                         alt="user image" width="100" height="100"
+                         style="object-fit: cover;">
+                    {% endif %}
+                </div>
+
+                <hr>
+
+                <div class="card-body">
+                    <h5 class="card-title">{{user.first_name}} {{user.last_name}}</h5>
+                    <p class="text-muted">@{{ user.username }}</p>
+                    <p class="card-text">Number of posts: {{ number_of_personal_posts }}</p>
+                </div>
+                <div class="card-footer d-flex justify-content-end">
+                    <a href="{% url 'post-account' %}" class="card-link">Edit</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="mt-2 mb-2 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary"
+                        data-toggle="modal"
+                        data-target="#exampleModalCenter">
+                    New Post It
+                </button>
+            </div>
+
+            {% for post_it in post_its %}
+            <div class="card mb-4">
+
+                <div class="card-body">
+                    <div>
+                        <div class="row" style="cursor:pointer" onclick="singlePostit({{post_it.id}})">
+                            <div class="col-2">
+                                {% if not post_it.posted_by.userimageextension.user_image.url %}
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     width="50"
+                                     height="50" fill="currentColor"
+                                     class="bi bi-person"
+                                     viewBox="0 0 16 16">
+                                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                                </svg>
+                                {% else %}
+                                <img class="rounded-circle"
+                                     src="{{ post_it.posted_by.userimageextension.user_image.url }}"
+                                     alt="User Image" width="50" height="50"
+                                     style="object-fit: cover;">
+                                {% endif %}
+                            </div>
+                            <div class="col-10">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title">{{post_it.post_title}}</h5>
+                                    </div>
+                                    <div class="col-4">
+                                        <p class="text-muted">{{post_it.time_published}}</p>
+                                    </div>
+                                </div>
+
+                                <p class="card-text">
+                                    {{post_it.post_body}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <p class="text-secondary">Posted by: {{post_it.posted_by}}</p>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+
+            <nav>
+                <span class="current">
+                    Page {{ post_its.number }} of {{ post_its.paginator.num_pages }}.
+                </span>
+                <ul class="pagination">
+                    {% if post_its.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">
+                            &laquo; First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ post_its.previous_page_number }}">
+                            Previous</a>
+                    </li>
+                    {% endif %}
+
+                    {% if post_its.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ post_its.next_page_number }}">
+                            Next
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ post_its.paginator.num_pages }}">
+                            Last &raquo;
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">New Post It</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST">
+                    <div class="modal-body">
+                        {% csrf_token %}
+
+                        {{ form|crispy }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Post now</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

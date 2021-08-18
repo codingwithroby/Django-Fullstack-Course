@@ -1,0 +1,71 @@
+{% extends "todo/main-base.html" %}
+{% block content %}
+
+<div class="container">
+<div class="card text-center">
+  <div class="card-header">
+    Your Todos!
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">List of your Todos!</h5>
+    <p class="card-text">Information regarding stuff that needs to be complete</p>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Info</th>
+      <th scope="col">Actions</th>
+
+    </tr>
+  </thead>
+  <tbody>
+
+
+  {% for todo in todos %}
+
+    {% if todo.complete == False %}
+  <tr class="pointer" >
+      <td>{{ forloop.counter }}</td>
+      <td >{{ todo.title }} </td>
+      <td>
+          <button type="button" class="btn btn-success"
+                  onclick="updateTodo({{todo.id}})">
+              Complete</button>
+          <button type="button" class="btn btn-danger"
+                  onclick="deleteTodo({{todo.id}})">
+              Delete
+          </button>
+      </td>
+  </tr>
+
+    {% else %}
+  <tr class="pointer alert alert-success" >
+      <td>{{ forloop.counter }}</td>
+      <td class="strike-through-td">{{ todo.title }} </td>
+      <td>
+          <button type="button" class="btn btn-success"
+                  onclick="updateTodo({{todo.id}})">
+              Undo
+          </button>
+          <button type="button" class="btn btn-danger"
+                  onclick="deleteTodo({{todo.id}})">
+              Delete
+          </button>
+      </td>
+  </tr>
+
+    {% endif %}
+
+  {% endfor %}
+
+  </tbody>
+</table>
+
+    <a href="{% url 'todo-add-todo' %}" class="btn btn-primary">Add a new Todo!</a>
+  </div>
+</div>
+  </div>
+{% endblock content  %}
+
+
